@@ -1,23 +1,5 @@
-# UrlShortener
+# Cloudflare workers
 
-This project was created using `npm create cloudflare@2`. It uses the [`wrangler`](https://developers.cloudflare.com/workers/wrangler/) cli tool to manage the project.
+gRPC requests are translated to gRPC-Web request before they hit worker. The proxy seems to parse the grpc-web trailers (part of the body) incorrectly. The trailer take the form of `Grpc-Status: 0`. The proxy is parsing the `Grpc-Status` as the name and ` 0` as the value. This is incorrect. The proxy should parse the `Grpc-Status` as the name and `0` as the value. This is causing gRPC requests to fail.
 
-## Server
-
-To start the server, run `npm start`. This starts a local development server.
-
-## Test
-
-### `npm run test`
-
-Run the unit tests via node. They also showcase the worker in action. See [`url-shortener.spec.ts`](src/url-shortener.test.ts) for more details.
-
-## Other helpful commands
-
-### `npm run generate`
-
-Use `buf` to generate the compiled protos via Protobuf-ES and Connect.
-
-### `npm run deploy`
-
-Deploys the worker to Cloudflare. This requires `wrangler.toml` file with the appropriate credentials.
+Run the `go` script using `go run ./main.go` and you will see the gRPC-Web request succeeding and the gRPC request failing.
